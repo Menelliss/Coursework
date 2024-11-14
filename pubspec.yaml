@@ -57,9 +57,9 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 flutter_native_splash:
-  image: assets/img/app_logo.png
+  image: assets/img/splash_screen.png
   color: "#1FBDD6"
-  image_dark: assets/img/app_logo.png
+  image_dark: assets/img/splash_screen.png
   color_dark: "#1FBDD6"
 
 flutter_launcher_icons:
