@@ -5,21 +5,11 @@ import 'signup.dart';
 import '../function/new_password.dart';
 import 'database.dart';
 import 'package:postgres/postgres.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'user_provider.dart';
 
-int? userID;
-String? number;
-String? userName;
-int? avatar;
-String? userEmail;
-
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
-
-  @override
-  _LoginPageState createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
+class LoginPage extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -74,36 +64,18 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: () async {
                         FocusScope.of(context).unfocus();
 
-                        final conn = PostgreSQLConnection(
-                          '10.0.2.2',
-                          5432,
-                          'Poteryaski',
-                          username: 'postgres',
-                          password: 'rootroot',
-                        );
-                        final db = Database(conn);
-                        await db.open();
-
-                        String email = _emailController.text;
-                        String password = _passwordController.text;
-
-                        int isValidUser = await db.checkUserLogin(email, password);
-
-                        if (isValidUser == 0) {
-
-                          userID = await db.getUserIdByEmail(email);
-                          number = await db.getUserNumberByEmail(email);
-                          userName = await db.getUserNameByEmail(email);
-                          avatar = await db.getUserAvatarByEmail(email);
-                          userEmail = _emailController.text;
-
+                        try {
+                          await Provider.of<UserProvider>(context, listen: false).login(
+                            _emailController.text,
+                            _passwordController.text,
+                          );
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                               builder: (context) => const Navigation(),
                             ),
                           );
-                        } else {
+                        } catch (e) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text(
@@ -120,9 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           );
                         }
-                        await db.close();
                       },
-
                       color: accentColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(50),
@@ -154,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const SignUpPage()),
+                                  builder: (context) => SignUpPage()),
                             );
                           },
                           child: const Text(

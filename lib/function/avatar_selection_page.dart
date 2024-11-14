@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:kursach_poteryashki/design/colors.dart';
-import 'package:kursach_poteryashki/pages/login_page.dart';
 import '../pages/database.dart';
 import 'package:postgres/postgres.dart';
+import 'package:provider/provider.dart';
+import '../pages/user_provider.dart';
 
 class AvatarSelectionPage extends StatelessWidget {
   final void Function(String) onAvatarSelected;
@@ -11,6 +12,8 @@ class AvatarSelectionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+
     final List<String> avatarPaths = [
       'assets/avatars/ava1.png',
       'assets/avatars/ava2.png',
@@ -40,8 +43,8 @@ class AvatarSelectionPage extends StatelessWidget {
 
           return GestureDetector(
             onTap: () async {
-              await _updateAvatar(index);
-
+              await _updateAvatar(userProvider.userEmail!, index);
+              userProvider.avatar = index;
               onAvatarSelected(path);
               Navigator.pop(context);
             },
@@ -61,7 +64,7 @@ class AvatarSelectionPage extends StatelessWidget {
     );
   }
 
-  Future<void> _updateAvatar(int avatarIndex) async {
+  Future<void> _updateAvatar(String userEmail, int avatarIndex) async {
     final conn = PostgreSQLConnection(
       '10.0.2.2',
       5432,
@@ -73,7 +76,7 @@ class AvatarSelectionPage extends StatelessWidget {
     final db = Database(conn);
 
     await db.open();
-    await db.changeAvatar(userEmail!, avatarIndex);
+    await db.changeAvatar(userEmail, avatarIndex); // Передаем userEmail
     await db.close();
   }
 }

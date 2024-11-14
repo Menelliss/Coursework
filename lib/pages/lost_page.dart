@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:postgres/postgres.dart';
+import 'package:provider/provider.dart';
+import 'user_provider.dart';
 import '../design/colors.dart';
 import 'database.dart';
-import 'login_page.dart';
 
 class LostPage extends StatefulWidget {
   const LostPage({super.key});
@@ -74,56 +74,53 @@ class _LostPageState extends State<LostPage> {
       final time1Interval = '${time1.hour}:${time1.minute}:00';
       final time2Interval = '${time2.hour}:${time2.minute}:00';
 
-      final conn = PostgreSQLConnection(
-          '10.0.2.2',
-          5432,
-          'Poteryaski',
-          username: 'postgres',
-          password: 'rootroot',
-      );
-      final db = Database(conn);
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+      final db = Database(userProvider.createConnection());
       await db.open();
       await db.lostThingAdd(
-        userID as int,
+        userProvider.userID!,
         title,
         date,
         time1Interval,
         time2Interval,
         description,
         address,
-        number as String,
+        userProvider.number!,
       );
       await db.close();
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Объявление сохранено',
-          style: TextStyle(
-            fontSize: 20,
-            color: whiteColor,
-            fontWeight: FontWeight.w400,
+        const SnackBar(
+          content: Text(
+            'Объявление сохранено',
+            style: TextStyle(
+              fontSize: 20,
+              color: whiteColor,
+              fontWeight: FontWeight.w400,
+            ),
           ),
-        ),
           backgroundColor: greenColor,
         ),
       );
       Navigator.pop(context);
-
     } else {
       FocusScope.of(context).unfocus();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Пожалуйста, заполните все поля',
-          style: TextStyle(
-            fontSize: 20,
-            color: whiteColor,
-            fontWeight: FontWeight.w400,
+        const SnackBar(
+          content: Text(
+            'Пожалуйста, заполните все поля',
+            style: TextStyle(
+              fontSize: 20,
+              color: whiteColor,
+              fontWeight: FontWeight.w400,
+            ),
           ),
-        ),
           backgroundColor: redColor,
         ),
       );
     }
   }
-
 
   @override
   Widget build(BuildContext context) {

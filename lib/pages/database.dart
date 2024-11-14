@@ -46,64 +46,34 @@ class Database {
     );
   }
 
-  Future<int?> getUserIdByEmail(String email) async {
-    try {
+  Future<int> getUserIdByEmail(String email) async {
       final results = await conn.query(
         'SELECT id FROM "User_reg" WHERE email = @email',
         substitutionValues: {
           'email': email,
         },
       );
-
-      if (results.isNotEmpty) {
-        return results.first[0] as int;
-      } else {
-        return null;
-      }
-    } catch (e) {
-      print('Error fetching user ID: $e');
-      return null;
-    }
+      return results.first[0] as int;
   }
 
-  Future<String?> getUserNameByEmail(String email) async {
-    try {
+  Future<String> getUserNameByEmail(String email) async {
       final results = await conn.query(
         'SELECT username FROM "User_reg" WHERE email = @email',
         substitutionValues: {
           'email': email,
         },
       );
-
-      if (results.isNotEmpty) {
-        return results.first[0];
-      } else {
-        return null;
-      }
-    } catch (e) {
-      print('Error fetching user ID: $e');
-      return null;
-    }
+      return results.first[0];
   }
 
-  Future<String?> getUserNumberByEmail(String email) async {
-    try {
+  Future<String> getUserNumberByEmail(String email) async {
       final results = await conn.query(
         'SELECT number FROM "User_reg" WHERE email = @email',
         substitutionValues: {
           'email': email,
         },
       );
-
-      if (results.isNotEmpty) {
-        return results.first[0];
-      } else {
-        return null;
-      }
-    } catch (e) {
-      print('Error fetching user ID: $e');
-      return null;
-    }
+      return results.first[0];
   }
 
   Future<int> checkUserLogin(String email, String password) async {
@@ -213,24 +183,14 @@ class Database {
     );
   }
 
-  Future<int?> getUserAvatarByEmail(String email) async {
-    try {
+  Future<int> getUserAvatarByEmail(String email) async {
       final results = await conn.query(
         'SELECT avatar FROM "User_reg" WHERE email = @email',
         substitutionValues: {
           'email': email,
         },
       );
-
-      if (results.isNotEmpty) {
-        return results.first[0];
-      } else {
-        return null;
-      }
-    } catch (e) {
-      print('Error fetching user ID: $e');
-      return null;
-    }
+      return results.first[0];
   }
 
   Future<void> changeAvatar(String email, int avatar) async {

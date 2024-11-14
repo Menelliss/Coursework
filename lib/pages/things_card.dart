@@ -18,7 +18,7 @@ class ProductDetailsPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.network(
+                  Image.asset(
                     thing['image'] ?? 'assets/img/default.png',
                     height: 400,
                     width: double.infinity,

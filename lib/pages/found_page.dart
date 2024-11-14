@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:postgres/postgres.dart';
+import 'package:provider/provider.dart';
 import '../design/colors.dart';
 import 'database.dart';
-import 'login_page.dart';
+import 'user_provider.dart';
 
 class FoundPage extends StatefulWidget {
   const FoundPage({super.key});
@@ -48,10 +48,10 @@ class _FoundPageState extends State<FoundPage> {
       setState(() {
         if (timeIndex == 1) {
           _selectedTime1 = picked;
-          _timeController1.text = picked.format(context); // Используйте TimeOfDay.format()
+          _timeController1.text = picked.format(context);
         } else {
           _selectedTime2 = picked;
-          _timeController2.text = picked.format(context); // Используйте TimeOfDay.format()
+          _timeController2.text = picked.format(context);
         }
       });
     }
@@ -62,8 +62,8 @@ class _FoundPageState extends State<FoundPage> {
     final address = _addressController.text;
     final description = _descriptionController.text;
     final date = _selectedDate;
-    final time1 = _selectedTime1; // Убедитесь, что это TimeOfDay
-    final time2 = _selectedTime2; // Убедитесь, что это TimeOfDay
+    final time1 = _selectedTime1;
+    final time2 = _selectedTime2;
 
     if (title.isNotEmpty &&
         address.isNotEmpty &&
@@ -71,30 +71,24 @@ class _FoundPageState extends State<FoundPage> {
         date != null &&
         time1 != null &&
         time2 != null) {
-      // Преобразуем TimeOfDay в строку интервала
       final time1Interval = '${time1.hour}:${time1.minute}:00';
       final time2Interval = '${time2.hour}:${time2.minute}:00';
 
-      final conn = PostgreSQLConnection(
-          '10.0.2.2',
-          5432,
-          'Poteryaski',
-          username: 'postgres',
-          password: 'rootroot',
-      );
-      final db = Database(conn);
-      await db.open();
-      await db.findThingAdd(
-        userID as int,
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+      final conn = Database(userProvider.createConnection());
+      await conn.open();
+      await conn.findThingAdd(
+        userProvider.userID!,
         title,
         date,
         time1Interval,
         time2Interval,
         description,
         address,
-        number as String,
+        userProvider.number!,
       );
-      await db.close();
+      await conn.close();
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Объявление сохранено',
@@ -124,7 +118,6 @@ class _FoundPageState extends State<FoundPage> {
       );
     }
   }
-
 
   @override
   Widget build(BuildContext context) {

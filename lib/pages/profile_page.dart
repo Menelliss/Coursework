@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../design/colors.dart';
 import 'settings_page.dart';
 import '../function/avatar_selection_page.dart';
-import 'login_page.dart';
-
+import 'user_provider.dart'; //
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -13,28 +13,41 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  String _avatarPath = 'assets/avatars/ava${avatar!+1}.png';
+  late String _avatarPath;
+
+  @override
+  void initState() {
+    super.initState();
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    _avatarPath = 'assets/avatars/ava${userProvider.avatar! + 1}.png'; // Используйте avatar из UserProvider
+  }
 
   void _showChangeAvatarDialog() {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Хотите поменять фотографию?', style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.w500,
-            color: blackColor
-          ),),
+          title: const Text(
+            'Хотите поменять фотографию?',
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w500,
+              color: blackColor,
+            ),
+          ),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text('Нет', style: TextStyle(
-                fontSize: 20,
-                color: blackColor,
-                fontWeight: FontWeight.w400,
-              ),),
+              child: const Text(
+                'Нет',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: blackColor,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
             ),
             TextButton(
               onPressed: () {
@@ -52,11 +65,13 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 );
               },
-              child: const Text('Да', style: TextStyle(
-                fontSize: 20,
-                color: blackColor,
-                fontWeight: FontWeight.w400,
-              )
+              child: const Text(
+                'Да',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: blackColor,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
           ],
@@ -67,6 +82,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -110,7 +127,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  '$userName',
+                  userProvider.userName ?? 'Имя пользователя', // Используйте userName из UserProvider
                   style: const TextStyle(
                     fontSize: 30,
                     color: blackColor,
@@ -125,23 +142,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   child: Column(
                     children: [
-                      // _buildButton(
-                      //   context,
-                      //   icon: Icons.search,
-                      //   label: 'Потерянные вещи',
-                      //   onPressed: () {
-                      //     print('Нажата кнопка для перехода к потерянным вещам');
-                      //   },
-                      // ),
-                      // const SizedBox(height: 10),
-                      // _buildButton(
-                      //   context,
-                      //   icon: Icons.playlist_add_check_outlined,
-                      //   label: 'Найденные вещи',
-                      //   onPressed: () {
-                      //     print('Нажата кнопка для перехода к найденным вещам');
-                      //   },
-                      // ),
                       const SizedBox(height: 10),
                       _buildButton(
                         context,
@@ -174,7 +174,7 @@ class _ProfilePageState extends State<ProfilePage> {
       }) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        double buttonWidth = constraints.maxWidth < 400 ? constraints.maxWidth : 400;
+        double buttonWidth = constraints .maxWidth < 400 ? constraints.maxWidth : 400;
 
         return SizedBox(
           width: buttonWidth,

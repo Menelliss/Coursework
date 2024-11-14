@@ -188,7 +188,7 @@ class _HomePageState extends State<HomePage> {
                                   children: <Widget>[
                                     ClipRRect(
                                       borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
-                                      child: Image.network(
+                                      child: Image.asset(
                                         thing['image'] ?? 'assets/img/default.png',
                                         height: 120,
                                         width: double.infinity,
