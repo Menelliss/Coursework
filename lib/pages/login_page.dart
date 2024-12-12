@@ -3,9 +3,6 @@ import 'package:kursach_poteryashki/design/colors.dart';
 import '../function/navigation.dart';
 import 'signup.dart';
 import '../function/new_password.dart';
-import 'database.dart';
-import 'package:postgres/postgres.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'user_provider.dart';
 

@@ -2,13 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'user_provider.dart';
 import 'package:kursach_poteryashki/design/colors.dart';
+import 'privacy_policy_page.dart';
+import 'package:flutter/gestures.dart';
 
-class SignUpPage extends StatelessWidget {
+class SignUpPage extends StatefulWidget {
+  @override
+  _SignUpPageState createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _loginController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
+  bool _isAgreedToPrivacyPolicy = false;
 
   @override
   Widget build(BuildContext context) {
@@ -48,20 +56,53 @@ class SignUpPage extends StatelessWidget {
                 buildTextField('Пароль, не менее 6 символов', _passwordController, true),
                 const Padding(padding: EdgeInsets.only(bottom: 20)),
                 buildTextField('Повторный пароль', _confirmPasswordController, true),
+                const Padding(padding: EdgeInsets.only(bottom: 20)),
+                CheckboxListTile(
+                  title: RichText(
+                    text: TextSpan(
+                      style: const TextStyle(fontSize: 16, color: Colors.black),
+                      children: [
+                        const TextSpan(text: "С "),
+                        TextSpan(
+                          text: "политикой конфиденциальности ",
+                          style: const TextStyle(color: accentColor, decoration: TextDecoration.underline),
+                          recognizer: TapGestureRecognizer()..onTap = () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const PrivacyPolicyPage()),
+                            );
+                          },
+                        ),
+                        const TextSpan(text: "ознакомлен"),
+                      ],
+                    ),
+                  ),
+                  value: _isAgreedToPrivacyPolicy,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _isAgreedToPrivacyPolicy = value ?? false;
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
                 const Padding(padding: EdgeInsets.only(bottom: 30)),
                 ElevatedButton(
                   onPressed: () async {
                     if (_passwordController.text == _confirmPasswordController.text) {
-                      try {
-                        await Provider.of<UserProvider>(context, listen: false).signup(
-                          _emailController.text,
-                          _passwordController.text,
-                          _loginController.text,
-                          _phoneController.text,
-                        );
-                        Navigator.pop(context); // Вернуться на страницу входа
-                      } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+                      if (_isAgreedToPrivacyPolicy) {
+                        try {
+                          await Provider.of<UserProvider>(context, listen: false).signup(
+                            _emailController.text,
+                            _passwordController.text,
+                            _loginController.text,
+                            _phoneController.text,
+                          );
+                          Navigator.pop(context);
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+                        }
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Пожалуйста, примите политику конфиденциальности')));
                       }
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Пароли не совпадают')));
@@ -213,7 +254,7 @@ class SignUpPage extends StatelessWidget {
             hintText: hintText,
             hintStyle: const TextStyle(
               color: greyColor,
-              fontSize: 18,
+              fontSize:  18,
             ),
             counterText: '',
           ),
@@ -222,4 +263,3 @@ class SignUpPage extends StatelessWidget {
     );
   }
 }
-

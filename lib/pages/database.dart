@@ -76,6 +76,52 @@ class Database {
       return results.first[0];
   }
 
+  Future<int> changePassword(String email, String pas1, String pas2) async {
+    final result = await conn.query(
+      'SELECT password FROM "User_reg" WHERE email = @email',
+      substitutionValues: {
+        'email': email,
+      },
+    );
+    if (result.isNotEmpty) {
+      final storedPasswordHash = result.first[0] as String;
+
+      if (BCrypt.checkpw(pas1, storedPasswordHash)) {
+        String newHashedPassword = BCrypt.hashpw(pas2, BCrypt.gensalt());
+        await conn.query(
+          'UPDATE "User_reg" SET password = @newPassword WHERE email = @email',
+          substitutionValues: {
+            'newPassword': newHashedPassword,
+            'email': email,
+          },
+        );
+
+        return 1;
+      } else {
+        return 0;
+      }
+    } else {
+      return -1;
+    }
+  }
+
+  Future<int> changeEmail(String oldEmail, String newEmail) async {
+    final emailCheckResult = await checkEmail(newEmail);
+    if (emailCheckResult == 0) {
+      return 0;
+    }
+
+    await conn.query(
+      'UPDATE "User_reg" SET email = @newEmail WHERE email = @oldEmail',
+      substitutionValues: {
+        'newEmail': newEmail,
+        'oldEmail': oldEmail,
+      },
+    );
+
+    return 1;
+  }
+
   Future<int> checkUserLogin(String email, String password) async {
     final result = await conn.query(
       'SELECT password FROM "User_reg" WHERE email = @email',

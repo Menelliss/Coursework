@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../pages/home_page.dart';
 import '../pages/add_page.dart';
-import '../pages/chat_page.dart';
 import '../pages/profile_page.dart';
 import '../design/colors.dart';
 
@@ -18,7 +17,6 @@ class _NavigationState extends State<Navigation> {
   final List<Widget> _pages = [
     const HomePage(),
     const AddPage(),
-    const ChatPage(),
     const ProfilePage(),
   ];
 
@@ -93,6 +91,5 @@ class Destination {
 const List<Destination> allDestinations = <Destination>[
   Destination(0, '', Icons.home),
   Destination(1, '', Icons.playlist_add_rounded),
-  Destination(2, '', Icons.sms_rounded),
-  Destination(3, '', Icons.person),
+  Destination(2, '', Icons.person),
 ];

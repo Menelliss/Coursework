@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../design/colors.dart';
 import 'settings_page.dart';
+import 'login_page.dart';
 import '../function/avatar_selection_page.dart';
-import 'user_provider.dart'; //
+import 'user_provider.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -154,10 +155,24 @@ class _ProfilePageState extends State<ProfilePage> {
                           );
                         },
                       ),
-                      const SizedBox(height: 20,)
+                      const SizedBox(height: 20),
+                      _buildButton(
+                        context,
+                        icon: Icons.logout,
+                        label: 'Выйти из аккаунта',
+                        onPressed: () {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LoginPage(),
+                            ),
+                                (Route<dynamic> route) => false,
+                          );
+                        },
+                      ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -174,7 +189,7 @@ class _ProfilePageState extends State<ProfilePage> {
       }) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        double buttonWidth = constraints .maxWidth < 400 ? constraints.maxWidth : 400;
+        double buttonWidth = constraints.maxWidth < 400 ? constraints.maxWidth : 400;
 
         return SizedBox(
           width: buttonWidth,
