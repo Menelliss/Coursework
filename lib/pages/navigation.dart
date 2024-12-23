@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../pages/home_page.dart';
-import '../pages/add_page.dart';
-import '../pages/profile_page.dart';
+import 'home_page.dart';
+import 'add_page.dart';
+import 'profile_page.dart';
 import '../design/colors.dart';
 
 class Navigation extends StatefulWidget {

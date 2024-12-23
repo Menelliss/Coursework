@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../design/colors.dart';
-import 'database.dart';
+import '../provider/user_provider.dart';
+import 'package:provider/provider.dart';
 import 'things_card.dart';
-import 'package:postgres/postgres.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,59 +12,41 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late PostgreSQLConnection conn;
-  late Database db;
-  List<Map<String, dynamic>> things = [];
-  List<Map<String, dynamic>> filteredThing = [];
+  List<dynamic> things = [];
+  List<dynamic> filteredThings = [];
   final TextEditingController _searchController = TextEditingController();
   bool _isLostSelected = true;
 
   @override
   void initState() {
     super.initState();
-    _initializeDatabase();
+    _fetchData();
   }
 
-  Future<void> _initializeDatabase() async {
-    conn = PostgreSQLConnection(
-        '10.0.2.2',
-        5432,
-        'Poteryaski',
-        username: 'postgres',
-        password: 'rootroot',
-    );
-
-    db = Database(conn);
-    await db.open();
-    await _fetchDataFromDatabase();
-  }
-
-  Future<void> _fetchDataFromDatabase() async {
+  Future<void> _fetchData() async {
     try {
-      List<Map<String, dynamic>> fetchedEvents;
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      final db = userProvider.db;
 
       if (_isLostSelected) {
-        fetchedEvents = await db.getRowsLost();
+        things = await db.getAllLostThings();
       } else {
-        fetchedEvents = await db.getRowsFind();
+        things = await db.getAllFindThings();
       }
-
-      setState(() {
-        things = fetchedEvents;
-        filteredThing = fetchedEvents;
-      });
+      filteredThings = things;
+      setState(() {});
     } catch (e) {
       print('Error fetching data: $e');
     }
   }
 
-  void _filterEvents(String query) {
+  void _filterThings(String query) {
     setState(() {
       if (query.isEmpty) {
-        filteredThing = things;
+        filteredThings = things;
       } else {
-        filteredThing = things.where((event) {
-          return event['title']!.toLowerCase().contains(query.toLowerCase());
+        filteredThings = things.where((thing) {
+          return thing['title']!.toLowerCase().contains(query.toLowerCase());
         }).toList();
       }
     });
@@ -105,12 +87,12 @@ class _HomePageState extends State<HomePage> {
                             color: accentColor,
                           ),
                           onPressed: () {
-                            _filterEvents(_searchController.text);
+                            _filterThings(_searchController.text);
                           },
                         ),
                       ),
                       onChanged: (value) {
-                        _filterEvents(value);
+                        _filterThings(value);
                       },
                     ),
                   ),
@@ -121,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                   onPressed: (int index) {
                     setState(() {
                       _isLostSelected = index == 0;
-                      _fetchDataFromDatabase();
+                      _fetchData();
                     });
                   },
                   borderRadius: BorderRadius.circular(12),
@@ -164,9 +146,9 @@ class _HomePageState extends State<HomePage> {
                           crossAxisSpacing: 5,
                           mainAxisSpacing: 5,
                         ),
-                        itemCount: filteredThing.length,
+                        itemCount: filteredThings.length,
                         itemBuilder: (context, index) {
-                          var thing = filteredThing[index];
+                          var thing = filteredThings[index];
                           return InkWell(
                             onTap: () {
                               Navigator.push(

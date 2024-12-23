@@ -11,23 +11,21 @@ class AddPage extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Spacer(),
             const Padding(
-              padding: EdgeInsets.only(top: 10),
+              padding: EdgeInsets.only(top: 20),
               child: Text(
                 "Создать\nобъявление",
                 style: TextStyle(
-                  fontSize: 30,
+                  fontSize: 36,
                   color: blackColor,
-                  fontWeight: FontWeight.w700,
-                  height: 1,
+                  fontWeight: FontWeight.w900,
                 ),
                 textAlign: TextAlign.center,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 140),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -38,8 +36,8 @@ class AddPage extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: accentColor,
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 35,
-                  vertical: 15,
+                  horizontal: 45,
+                  vertical: 22,
                 ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -49,11 +47,11 @@ class AddPage extends StatelessWidget {
                 "Потерял",
                 style: TextStyle(
                   color: whiteColor,
-                  fontSize: 24,
+                  fontSize: 28,
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 25),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -64,8 +62,8 @@ class AddPage extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: accentColor,
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 35,
-                  vertical: 15,
+                  horizontal: 45,
+                  vertical: 22,
                 ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -75,7 +73,7 @@ class AddPage extends StatelessWidget {
                 "Нашел",
                 style: TextStyle(
                   color: whiteColor,
-                  fontSize: 24,
+                  fontSize: 28,
                 ),
               ),
             ),

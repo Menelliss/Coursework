@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../design/colors.dart';
-import '../pages/database.dart'; // Импортируйте ваш класс Database
-import '../pages/user_provider.dart';
+import '../provider/user_provider.dart';
 
 class ChangePasswordPage extends StatefulWidget {
   const ChangePasswordPage({super.key});
@@ -22,26 +21,25 @@ class ChangePasswordPageState extends State<ChangePasswordPage> {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     String? email = userProvider.userEmail;
 
-    final db = Database(userProvider.createConnection());
-    await db.open();
-
-    int result = await db.changePassword(email!, oldPassword, newPassword);
-
-    await db.close();
-
-    if (result == 1) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Пароль успешно изменен")),
-      );
-      _oldPasswordController.clear();
-      _newPasswordController.clear();
-    } else if (result == 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Неверный старый пароль")),
-      );
-    } else {
+    if (email == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Пользователь не найден")),
+      );
+      return;
+    }
+
+    try {
+      String result = await userProvider.db.changePassword(email, oldPassword, newPassword);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result)),
+      );
+
+      _oldPasswordController.clear();
+      _newPasswordController.clear();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Ошибка при изменении пароля")),
       );
     }
   }

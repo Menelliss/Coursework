@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:kursach_poteryashki/design/colors.dart';
-import '../function/navigation.dart';
+import 'navigation.dart';
 import 'signup.dart';
 import '../function/new_password.dart';
 import 'package:provider/provider.dart';
-import 'user_provider.dart';
+import '../provider/user_provider.dart';
 
 class LoginPage extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
@@ -45,12 +45,10 @@ class LoginPage extends StatelessWidget {
                     const Padding(
                       padding: EdgeInsets.only(bottom: 30),
                     ),
-                    // Поле ввода для email
                     buildLoginTextField('Логин', _emailController),
                     const Padding(
                       padding: EdgeInsets.only(bottom: 20),
                     ),
-                    // Поле ввода для пароля
                     buildTextField('Пароль', _passwordController),
                     const Padding(
                       padding: EdgeInsets.only(bottom: 30),
@@ -138,35 +136,35 @@ class LoginPage extends StatelessWidget {
                     const Padding(
                       padding: EdgeInsets.only(bottom: 10),
                     ),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: <Widget>[
-                    //     const Text(
-                    //       "Забыли пароль? ",
-                    //       style: TextStyle(
-                    //         color: Colors.grey,
-                    //         fontSize: 18,
-                    //       ),
-                    //     ),
-                    //     GestureDetector(
-                    //       onTap: () {
-                    //         Navigator.push(
-                    //           context,
-                    //           MaterialPageRoute(
-                    //               builder: (context) => const NewPasswordPage()),
-                    //         );
-                    //       },
-                    //       child: const Text(
-                    //         "Восстановить",
-                    //         style: TextStyle(
-                    //           fontWeight: FontWeight.w500,
-                    //           fontSize: 18,
-                    //           color: blackColor,
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        const Text(
+                          "Забыли пароль? ",
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 18,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const NewPasswordPage()),
+                            );
+                          },
+                          child: const Text(
+                            "Восстановить",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 18,
+                              color: blackColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                     const Padding(
                       padding: EdgeInsets.only(bottom: 50),
                     ),

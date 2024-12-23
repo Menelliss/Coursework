@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'user_provider.dart';
+import '../provider/user_provider.dart';
 import 'package:kursach_poteryashki/design/colors.dart';
-import 'privacy_policy_page.dart';
+import '../design/privacy_policy_page.dart';
 import 'package:flutter/gestures.dart';
 
 class SignUpPage extends StatefulWidget {

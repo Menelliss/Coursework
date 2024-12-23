@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import '../design/colors.dart';
-import 'login_page.dart';
-import '../function/new_password.dart';
 import '../function/change_email_page.dart';
 import '../function/change_password_page.dart';
 

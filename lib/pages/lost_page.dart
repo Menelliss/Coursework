@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'user_provider.dart';
+import '../provider/user_provider.dart';
 import '../design/colors.dart';
-import 'database.dart';
 
 class LostPage extends StatefulWidget {
   const LostPage({super.key});
@@ -73,51 +72,70 @@ class _LostPageState extends State<LostPage> {
         time2 != null) {
       final time1Interval = '${time1.hour}:${time1.minute}:00';
       final time2Interval = '${time2.hour}:${time2.minute}:00';
+      final formattedDate = DateFormat('yyyy-MM-dd').format(date);
 
       final userProvider = Provider.of<UserProvider>(context, listen: false);
 
-      final db = Database(userProvider.createConnection());
-      await db.open();
-      await db.lostThingAdd(
-        userProvider.userID!,
-        title,
-        date,
-        time1Interval,
-        time2Interval,
-        description,
-        address,
-        userProvider.number!,
-      );
-      await db.close();
+      final lostThingData = {
+        'user_id': userProvider.userID,
+        'title': title,
+        'lost_date': formattedDate,
+        'time_1': time1Interval,
+        'time_2': time2Interval,
+        'description': description,
+        'address': address,
+        'number': userProvider.number,
+        'image': '',
+        'status': false,
+      };
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Объявление сохранено',
-            style: TextStyle(
-              fontSize: 20,
-              color: whiteColor,
-              fontWeight: FontWeight.w400,
+      try {
+        await userProvider.db.addLostThing(lostThingData);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Объявление сохранено',
+              style: TextStyle(
+                fontSize: 20,
+                color: whiteColor,
+                fontWeight: FontWeight.w400,
+              ),
             ),
+            backgroundColor: greenColor,
           ),
-          backgroundColor: greenColor,
-        ),
-      );
-      Navigator.pop(context);
+        );
+        Navigator.pop(context);
+      } catch (e) {
+        print('Error: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Ошибка при сохранении объявления',
+              style: TextStyle(
+                fontSize: 20,
+                color: whiteColor,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            backgroundColor: redColor,
+          ),
+        );
+      }
     } else {
       FocusScope.of(context).unfocus();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+          const SnackBar(
           content: Text(
-            'Пожалуйста, заполните все поля',
-            style: TextStyle(
-              fontSize: 20,
-              color: whiteColor,
-              fontWeight: FontWeight.w400,
-            ),
+          'Пожалуйста, заполните все поля',
+          style: TextStyle(
+          fontSize: 20,
+          color: whiteColor,
+          fontWeight: FontWeight.w400,
+      ),
           ),
-          backgroundColor: redColor,
-        ),
+            backgroundColor: redColor,
+          ),
       );
     }
   }

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../design/colors.dart';
-import '../pages/database.dart';
-import '../pages/user_provider.dart';
+import '../provider/user_provider.dart';
 
 class ChangeEmailPage extends StatefulWidget {
   const ChangeEmailPage({super.key});
@@ -12,12 +11,12 @@ class ChangeEmailPage extends StatefulWidget {
 }
 
 class _ChangeEmailPageState extends State<ChangeEmailPage> {
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _newEmailController = TextEditingController();
 
   Future<void> _changeEmail() async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     String? oldEmail = userProvider.userEmail;
-    String newEmail = _emailController.text;
+    String newEmail = _newEmailController.text;
 
     if (newEmail.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -26,23 +25,21 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
       return;
     }
 
-    final db = Database(userProvider.createConnection());
-    await db.open();
+    try {
+      String result = await userProvider.db.changeEmail(oldEmail!, newEmail);
 
-    int result = await db.changeEmail(oldEmail!, newEmail);
-
-    await db.close();
-
-    if (result == 1) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Email успешно изменен")),
+        SnackBar(content: Text(result)),
       );
-      userProvider.userEmail = newEmail;
-      userProvider.notifyListeners();
-      _emailController.clear();
-    } else if (result == 0) {
+
+      if (result == 'Email успешно изменен') {
+        userProvider.userEmail = newEmail;
+        userProvider.notifyListeners();
+        _newEmailController.clear();
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Этот email уже занят")),
+        SnackBar(content: Text("Ошибка при смене email: $e")),
       );
     }
   }
@@ -59,7 +56,7 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
         child: Column(
           children: [
             TextField(
-              controller: _emailController,
+              controller: _newEmailController,
               decoration: const InputDecoration(
                 labelText: "Новый email",
                 border: OutlineInputBorder(),

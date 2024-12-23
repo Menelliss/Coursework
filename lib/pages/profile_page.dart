@@ -4,7 +4,8 @@ import '../design/colors.dart';
 import 'settings_page.dart';
 import 'login_page.dart';
 import '../function/avatar_selection_page.dart';
-import 'user_provider.dart';
+import '../provider/user_provider.dart';
+import 'user_card_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -20,7 +21,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    _avatarPath = 'assets/avatars/ava${userProvider.avatar! + 1}.png'; // Используйте avatar из UserProvider
+    _avatarPath = 'assets/avatars/ava${userProvider.avatar!+1}.png';
   }
 
   void _showChangeAvatarDialog() {
@@ -95,7 +96,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 const Text(
                   "Мой профиль",
                   style: TextStyle(
-                    fontSize: 38,
+                    fontSize: 36,
                     color: blackColor,
                     fontWeight: FontWeight.w900,
                   ),
@@ -128,7 +129,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  userProvider.userName ?? 'Имя пользователя', // Используйте userName из UserProvider
+                  userProvider.userName ?? 'Имя пользователя',
                   style: const TextStyle(
                     fontSize: 30,
                     color: blackColor,
@@ -152,6 +153,18 @@ class _ProfilePageState extends State<ProfilePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => const SettingsPage()),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      _buildButton(
+                        context,
+                        icon: Icons.list,
+                        label: 'Мои находки',
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const MyFindingsPage()),
                           );
                         },
                       ),
