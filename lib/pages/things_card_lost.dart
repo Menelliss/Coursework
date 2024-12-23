@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:kursach_poteryashki/design/colors.dart';
 
-class ProductDetailsPage extends StatelessWidget {
+class ProductDetailsPageLost extends StatelessWidget {
   final Map<String, dynamic> thing;
 
-  ProductDetailsPage({Key? key, required this.thing}) : super(key: key);
+  ProductDetailsPageLost ({Key? key, required this.thing}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

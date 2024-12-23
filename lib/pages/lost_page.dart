@@ -125,17 +125,17 @@ class _LostPageState extends State<LostPage> {
     } else {
       FocusScope.of(context).unfocus();
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+        const SnackBar(
           content: Text(
-          'Пожалуйста, заполните все поля',
-          style: TextStyle(
-          fontSize: 20,
-          color: whiteColor,
-          fontWeight: FontWeight.w400,
-      ),
+            'Пожалуйста, заполните все поля',
+            style: TextStyle(
+              fontSize: 20,
+              color: whiteColor,
+              fontWeight: FontWeight.w400,
+            ),
           ),
-            backgroundColor: redColor,
-          ),
+          backgroundColor: redColor,
+        ),
       );
     }
   }

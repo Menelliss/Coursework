@@ -175,7 +175,7 @@ class ApiServer {
 
   Future<void> addFindThing(Map<String, dynamic> findThingData) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/find_things'),
+      Uri.parse('$baseUrl/add_find_things'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode(findThingData),
     );
@@ -218,7 +218,7 @@ class ApiServer {
 
   Future<void> addLostThing(Map<String, dynamic> lostThingData) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/lost_things_add'),
+      Uri.parse('$baseUrl/add_lost_things'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode(lostThingData),
     );

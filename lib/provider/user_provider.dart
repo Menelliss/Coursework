@@ -8,7 +8,7 @@ class UserProvider with ChangeNotifier {
   int? avatar;
   String? userEmail;
 
-  final db = ApiServer('http://192.168.0.6:5000');
+  final db = ApiServer('http://89.169.39.16:5000');
 
   Future<void> login(String email, String password) async {
     try {
