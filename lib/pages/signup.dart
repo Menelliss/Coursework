@@ -51,7 +51,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 const Padding(padding: EdgeInsets.only(bottom: 20)),
                 buildEmailTextField('Почта', _emailController),
                 const Padding(padding: EdgeInsets.only(bottom: 20)),
-                buildPhoneTextField('Номер телефона', _phoneController),
+                buildPhoneTextField('Номер телефона (c +7)', _phoneController),
                 const Padding(padding: EdgeInsets.only(bottom: 20)),
                 buildTextField('Пароль, не менее 6 символов', _passwordController, true),
                 const Padding(padding: EdgeInsets.only(bottom: 20)),

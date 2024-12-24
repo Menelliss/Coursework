@@ -45,7 +45,7 @@ class LoginPage extends StatelessWidget {
                     const Padding(
                       padding: EdgeInsets.only(bottom: 30),
                     ),
-                    buildLoginTextField('Логин', _emailController),
+                    buildLoginTextField('Логин (ваш email)', _emailController),
                     const Padding(
                       padding: EdgeInsets.only(bottom: 20),
                     ),
